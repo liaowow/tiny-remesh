@@ -20,14 +20,18 @@ ActiveRecord::Schema.define(version: 2020_09_18_170833) do
 
   create_table "messages", force: :cascade do |t|
     t.string "text"
+    t.integer "convo_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["convo_id"], name: "index_messages_on_convo_id"
   end
 
   create_table "thoughts", force: :cascade do |t|
     t.string "text"
+    t.integer "message_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["message_id"], name: "index_thoughts_on_message_id"
   end
 
 end
