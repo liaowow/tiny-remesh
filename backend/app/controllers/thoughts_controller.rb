@@ -5,11 +5,14 @@ class ThoughtsController < ApplicationController
   # GET /thoughts.json
   def index
     @thoughts = Thought.all
+    render json: @thoughts
   end
 
   # GET /thoughts/1
   # GET /thoughts/1.json
   def show
+    @thought = Thought.find_by(id: params[:id])
+    render json: @thought
   end
 
   # GET /thoughts/new

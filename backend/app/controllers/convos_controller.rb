@@ -5,11 +5,14 @@ class ConvosController < ApplicationController
   # GET /convos.json
   def index
     @convos = Convo.all
+    render json: @convos
   end
 
   # GET /convos/1
   # GET /convos/1.json
   def show
+    @convo = Convo.find_by(id: params[:id])
+    render json: @convo
   end
 
   # GET /convos/new

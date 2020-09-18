@@ -5,11 +5,14 @@ class MessagesController < ApplicationController
   # GET /messages.json
   def index
     @messages = Message.all
+    render json: @messages
   end
 
   # GET /messages/1
   # GET /messages/1.json
   def show
+    @message = Message.find_by(id: params[:id])
+    render json: @message
   end
 
   # GET /messages/new
