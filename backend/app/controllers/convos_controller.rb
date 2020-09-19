@@ -31,9 +31,9 @@ class ConvosController < ApplicationController
     @convo = Convo.create(title: params[:title])
 
     if @convo.valid?
-        render json: @convo
+      render json: @convo
     else
-        render json: { errors: @convo.errors.full_messages }, status: 400
+      render json: { errors: @convo.errors.full_messages }, status: 400
     end
   end
 

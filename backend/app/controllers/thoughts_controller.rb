@@ -28,16 +28,15 @@ class ThoughtsController < ApplicationController
   # POST /thoughts
   # POST /thoughts.json
   def create
-    @thought = Thought.new(thought_params)
+    @thought = Thought.create(
+      text: params[:text],
+      message_id: params[:message_id]
+    )
 
-    respond_to do |format|
-      if @thought.save
-        format.html { redirect_to @thought, notice: 'Thought was successfully created.' }
-        format.json { render :show, status: :created, location: @thought }
-      else
-        format.html { render :new }
-        format.json { render json: @thought.errors, status: :unprocessable_entity }
-      end
+    if @thought.valid?
+      render json: @thought
+    else
+      render json: { errors: @thought.errors.full_messages }, status: 400
     end
   end
 

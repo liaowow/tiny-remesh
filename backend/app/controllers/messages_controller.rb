@@ -31,13 +31,13 @@ class MessagesController < ApplicationController
     @message = Message.create(
       text: params[:text],
       convo_id: params[:convo_id]
-  )
+    )
 
-  if @message.valid?
+    if @message.valid?
       render json: @message
-  else
+    else
       render json: { errors: @message.errors.full_messages }, status: 400
-  end
+    end
   end
 
   # PATCH/PUT /messages/1
