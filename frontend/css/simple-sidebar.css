@@ -48,3 +48,12 @@ body {
     margin-left: -15rem;
   }
 }
+
+.search {
+  border-radius: 10px;
+  width: 100%;
+  text-align: center;
+  display: block;
+  margin: auto;
+  padding: 1rem;
+}

@@ -1,4 +1,5 @@
 class ThoughtsController < ApplicationController
+  skip_before_action :verify_authenticity_token, :only => [:create]
   before_action :set_thought, only: [:show, :edit, :update, :destroy]
 
   # GET /thoughts

@@ -1,4 +1,5 @@
 class MessagesController < ApplicationController
+  skip_before_action :verify_authenticity_token, :only => [:create]
   before_action :set_message, only: [:show, :edit, :update, :destroy]
 
   # GET /messages
@@ -27,17 +28,16 @@ class MessagesController < ApplicationController
   # POST /messages
   # POST /messages.json
   def create
-    @message = Message.new(message_params)
+    @message = Message.create(
+      text: params[:text],
+      convo_id: params[:convo_id]
+  )
 
-    respond_to do |format|
-      if @message.save
-        format.html { redirect_to @message, notice: 'Message was successfully created.' }
-        format.json { render :show, status: :created, location: @message }
-      else
-        format.html { render :new }
-        format.json { render json: @message.errors, status: :unprocessable_entity }
-      end
-    end
+  if @message.valid?
+      render json: @message
+  else
+      render json: { errors: @message.errors.full_messages }, status: 400
+  end
   end
 
   # PATCH/PUT /messages/1

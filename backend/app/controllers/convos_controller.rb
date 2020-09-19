@@ -1,4 +1,5 @@
 class ConvosController < ApplicationController
+  skip_before_action :verify_authenticity_token, :only => [:create]
   before_action :set_convo, only: [:show, :edit, :update, :destroy]
 
   # GET /convos
@@ -27,16 +28,12 @@ class ConvosController < ApplicationController
   # POST /convos
   # POST /convos.json
   def create
-    @convo = Convo.new(convo_params)
+    @convo = Convo.create(title: params[:title])
 
-    respond_to do |format|
-      if @convo.save
-        format.html { redirect_to @convo, notice: 'Convo was successfully created.' }
-        format.json { render :show, status: :created, location: @convo }
-      else
-        format.html { render :new }
-        format.json { render json: @convo.errors, status: :unprocessable_entity }
-      end
+    if @convo.valid?
+        render json: @convo
+    else
+        render json: { errors: @convo.errors.full_messages }, status: 400
     end
   end
 

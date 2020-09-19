@@ -5,11 +5,11 @@ require 'rails/all'
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
-
 module Backend
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
+    Rails.application.config.action_controller.forgery_protection_origin_check = false
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
