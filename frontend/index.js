@@ -140,9 +140,18 @@ function handleCreateConvo(event) {
 }
 
 
-function handleCreateThought(e, msgID) {
-  e.preventDefault()
-  console.log('over here!!!!!')
+function handleCreateThought(msgID) {
+  console.log("msgID: ", msgID)
+  const thoughtContent = document.querySelector("#thoughtcontent")
+  if (thoughtContent) {
+    let newThought = thoughtContent.value
+    const newThoughtObj = {
+      text: newThought,
+      message_id: msgID
+  }
+  // postThoughtFetch(newThoughtObj)
+  alert('New thought sent! 🎉')
+  }
 }
 
 /***** RENDER FUNCTIONS *****/
@@ -204,23 +213,18 @@ function renderMessages(msgArr) {
     return msgArr.map(msg => {
       const clickedThoughts = allThoughts.filter(thought => thought.message_id === msg.id)
       const msgID = msg.id
-
       return `
         <h5>${msg.text}</h5>
         <p>⏰ Date and time sent: ${new Date(msg.updated_at).toLocaleString().split(",")}</p>
-        <div style="background-color: #D3D3D3; border-radius: 10px; padding: 10px;">
+        <div class="thoughts-bg">
           <h6>Thoughts:</h6>
           ${renderThoughts(clickedThoughts)}
-          <form id="create-thought-form">
-            <label for="title">Create New Thought:</label><br>
-            <textarea name="text" rows="4" cols="50"></textarea><br><br>
-            <input type="submit" class="btn btn-primary" value="Submit Thought"><br><br>
-          </form>
+          <label for="title">Create New Thought:</label><br>
+          <textarea name="text" rows="4" cols="50"></textarea><br><br>
+          <button type="button" class="btn btn-primary" onclick="${handleCreateThought(msgID)}">Create New Thought</button><br><br>
         </div>
         <hr>
       `
-
-      const createThoughtForm = document.querySelector('#create-thought-form')
     }).join('')
   }
 }
@@ -261,7 +265,7 @@ function renderSearchForm() {
   <h1>Search Conversation</h1><br>
   <div class="search-form">
     <input class="search" type="text" placeholder="Search by title or keyword..." /><br>
-    <button class="btn btn-secondary">Search</button>
+    <button class="btn btn-secondary">Search</button><br><br>
   </div>
   <div class="card-columns"></div>
   `
@@ -271,17 +275,14 @@ function renderSearchForm() {
 }
 
 function displayMatch(e, searchInput) {
-
-  let input = searchInput.value.toLowerCase()
-  let matchedArr = allConvos.filter(convo => {
+  const input = searchInput.value.toLowerCase()
+  const matchedArr = allConvos.filter(convo => {
     return convo.title.toLowerCase().includes(input)
   })
-  console.log(matchedArr)
 
   if (matchedArr.length) {
     return matchedArr.forEach(convo => renderOneConvo(convo))
   }
-    
 }
 
 /***** INITIAL RENDERS *****/

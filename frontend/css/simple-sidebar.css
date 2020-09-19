@@ -57,3 +57,9 @@ body {
   margin: auto;
   padding: 0.5rem;
 }
+
+.thoughts-bg {
+  background-color: #d3d3d3b9; 
+  border-radius: 10px; 
+  padding: 10px;
+}
