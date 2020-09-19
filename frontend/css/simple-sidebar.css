@@ -51,9 +51,9 @@ body {
 
 .search {
   border-radius: 10px;
-  width: 100%;
+  width: 60%;
   text-align: center;
   display: block;
   margin: auto;
-  padding: 1rem;
+  padding: 0.5rem;
 }

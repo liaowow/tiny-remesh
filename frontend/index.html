@@ -29,9 +29,14 @@
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
-      
+      <nav class="navbar">
+        <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+      </nav>
       <div class="container-fluid">
-        
+        <br>
+        <h1 style="text-align: center;">Your Conversations</h1>
+        <br>
+        <div class="card-columns"></div>
       </div>
     </div>
     <!-- /#page-content-wrapper -->
@@ -63,6 +68,14 @@
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Menu Toggle Script -->
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  </script>
 
 </body>
 

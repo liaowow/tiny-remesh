@@ -15,7 +15,7 @@ function getAllContent() {
     .then(res => res.json())
     .then(convosArr => {
       allConvos = convosArr
-      renderAllConvos(convosArr)
+      renderAllConvos(allConvos)
     })
 
   fetch(`${baseURL}/messages`)
@@ -72,12 +72,16 @@ mainPageDiv.addEventListener("click", handleConvoCard)
 function handleSidebarClick(event) {
   switch(event.target.id) {
     case "all-convos":
-      mainPageDiv.className = ""
+      mainPageDiv.className = "center-form"
       getAllContent()
       break
     case "create-convo":
       mainPageDiv.className = "center-form"
       renderConvoForm()
+      break
+    case "search-convo":
+      mainPageDiv.className = "center-form"
+      renderSearchForm()
       break
   }
 }
@@ -120,6 +124,7 @@ function handleConvoCard(event) {
           convo_id: clickedConvoID
       }
       postMsgFetch(newMsgObj)
+      alert('New message sent! 🎉')
       createMsgForm.reset()
     })
   }
@@ -141,7 +146,7 @@ function handleCreateThought(e, msgID) {
 }
 
 /***** RENDER FUNCTIONS *****/
-// renders sidebar
+// render sidebar
 function renderSidebar() {
   sidebarDiv.innerHTML = `
     <div class="sidebar-heading">
@@ -151,19 +156,17 @@ function renderSidebar() {
     <div class="list-group list-group-flush">
         <a href="#" class="list-group-item list-group-item-action bg-light" id="all-convos">All Conversations</a>
         <a href="#" class="list-group-item list-group-item-action bg-light" id="create-convo">Create New Conversation</a>
+        <a href="#" class="list-group-item list-group-item-action bg-light" id="search-convo">Search Conversation</a>
     </div>`
 }
 
 // render all convos
 function renderAllConvos(convosArr) {
   mainPageDiv.innerHTML = `
-  <br>
-  <h1 style="text-align: center;">Your Conversations</h1>
-  <div class="search">
-    <input class="searchterm" type="text" placeholder="Search by title..." />
-  </div>
-  <br>
-  <div class="card-columns"></div>
+    <br>
+    <h1 style="text-align: center;">Your Conversations</h1>
+    <br>
+    <div class="card-columns"></div>
   `
   convosArr.forEach(convo => renderOneConvo(convo))
 }
@@ -199,7 +202,6 @@ function renderMessages(msgArr) {
     `
   } else {
     return msgArr.map(msg => {
-      console.log(msg)
       const clickedThoughts = allThoughts.filter(thought => thought.message_id === msg.id)
       const msgID = msg.id
 
@@ -219,7 +221,7 @@ function renderMessages(msgArr) {
       `
 
       const createThoughtForm = document.querySelector('#create-thought-form')
-    })
+    }).join('')
   }
 }
 
@@ -233,7 +235,7 @@ function renderThoughts(thoughtsArr) {
         <li>${thought.text}</li>
         <p>💡 Date and time sent: ${new Date(thought.updated_at).toLocaleString().split(",")}</p>
       `
-    })
+    }).join('')
   }
 }
 
@@ -250,6 +252,36 @@ function renderConvoForm() {
   `
   const createConvoForm = document.querySelector("#create-convo-form")
   createConvoForm.addEventListener("submit", handleCreateConvo)
+}
+
+// render search form
+function renderSearchForm() {
+  mainPageWrapper.className = ""
+  mainPageDiv.innerHTML = `
+  <h1>Search Conversation</h1><br>
+  <div class="search-form">
+    <input class="search" type="text" placeholder="Search by title or keyword..." /><br>
+    <button class="btn btn-secondary">Search</button>
+  </div>
+  <div class="card-columns"></div>
+  `
+  const searchInput = document.querySelector('.search')
+  const searchBtn = document.querySelector('.btn-secondary')
+  searchBtn.addEventListener('click', (e) => displayMatch(e, searchInput))
+}
+
+function displayMatch(e, searchInput) {
+
+  let input = searchInput.value.toLowerCase()
+  let matchedArr = allConvos.filter(convo => {
+    return convo.title.toLowerCase().includes(input)
+  })
+  console.log(matchedArr)
+
+  if (matchedArr.length) {
+    return matchedArr.forEach(convo => renderOneConvo(convo))
+  }
+    
 }
 
 /***** INITIAL RENDERS *****/
