@@ -1,6 +1,7 @@
-let allConvos;
-let allMessages;
-let allThoughts;
+let allConvos = []
+let allMessages = []
+let allThoughts = []
+let thoughtUniqID;
 
 /***** FETCHES *****/
 const baseURL = "http://localhost:3000";
@@ -56,16 +57,44 @@ function postMsgFetch(newMsgObj) {
   })
 }
 
+function postThoughtFetch(newThoughtObj) {
+  fetch(`${baseURL}/thoughts`, {
+    method: "POST",
+    headers: defaultHeaders,
+    body: JSON.stringify(newThoughtObj)
+  })
+  .then(res => res.json())
+  .then(newThought => {
+    getAllContent()
+  })
+}
+
 /***** DOM ELEMENTS *****/
+// getElementById is more efficient
 const sidebarDiv = document.querySelector("#sidebar-wrapper")
 const mainPageWrapper = document.querySelector("#page-content-wrapper")
 const mainPageDiv = document.querySelector(".container-fluid")
 const modalContainer = document.querySelector(".modal-content")
 const msgContainer = document.querySelector(".modal-body")
+const cardColumn = document.querySelector("#exampleModalLong")
 
 /***** EVENT LISTENERS *****/
 sidebarDiv.addEventListener("click", handleSidebarClick)
 mainPageDiv.addEventListener("click", handleConvoCard)
+
+cardColumn.addEventListener("click", (event) => {
+  if (event.target.id === "create-thought") {
+    console.log("thoughtUniqID: ", thoughtUniqID)
+    console.log("input dataset ID: ", document.getElementById("thought-input").dataset.msgid)
+    const newThought = document.getElementById("thought-input").value
+    const newThoughtObj = {
+      text: newThought,
+      message_id: document.getElementById("thought-input").dataset.msgid
+    }
+    postThoughtFetch(newThoughtObj)
+    alert('New thought sent! 🎉')
+  }
+})
 
 /***** EVENT HANDLERS *****/
 // handles clicking a link in the sidebar
@@ -139,21 +168,6 @@ function handleCreateConvo(event) {
   postConvoFetch(newConvoObj)
 }
 
-
-function handleCreateThought(msgID) {
-  console.log("msgID: ", msgID)
-  const thoughtContent = document.querySelector("#thoughtcontent")
-  if (thoughtContent) {
-    let newThought = thoughtContent.value
-    const newThoughtObj = {
-      text: newThought,
-      message_id: msgID
-  }
-  // postThoughtFetch(newThoughtObj)
-  alert('New thought sent! 🎉')
-  }
-}
-
 /***** RENDER FUNCTIONS *****/
 // render sidebar
 function renderSidebar() {
@@ -175,7 +189,7 @@ function renderAllConvos(convosArr) {
     <br>
     <h1 style="text-align: center;">Your Conversations</h1>
     <br>
-    <div class="card-columns"></div>
+    <div id="uniq-cards" class="card-columns"></div>
   `
   convosArr.forEach(convo => renderOneConvo(convo))
 }
@@ -212,16 +226,19 @@ function renderMessages(msgArr) {
   } else {
     return msgArr.map(msg => {
       const clickedThoughts = allThoughts.filter(thought => thought.message_id === msg.id)
-      const msgID = msg.id
+      thoughtUniqID = msg.id
+      console.log("msg.id when mapping: ", msg.id)
       return `
         <h5>${msg.text}</h5>
         <p>⏰ Date and time sent: ${new Date(msg.updated_at).toLocaleString().split(",")}</p>
         <div class="thoughts-bg">
           <h6>Thoughts:</h6>
           ${renderThoughts(clickedThoughts)}
-          <label for="title">Create New Thought:</label><br>
-          <textarea name="text" rows="4" cols="50"></textarea><br><br>
-          <button type="button" class="btn btn-primary" onclick="${handleCreateThought(msgID)}">Create New Thought</button><br><br>
+          <form id="thoughtcontent">
+            <label for="title">Create New Thought:</label><br>
+            <input id="thought-input" data-msgid="${msg.id}" name="text" type="text"></input><br><br>
+            <button id="create-thought" type="button" class="btn btn-primary">Create New Thought</button><br><br>
+          </form>
         </div>
         <hr>
       `
